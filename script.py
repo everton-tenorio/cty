@@ -15,9 +15,11 @@ def git_commit(commit_type, example_message):
             output, code = run_git_command(f'git commit -m "{commit_message}"')
             if code == 0:
                 confirmation_message = f"Commit realizado com sucesso!\n\n{output}"
+                messagebox.showinfo("Git Commit", confirmation_message)
                 console_output.insert(tk.END, confirmation_message, "yellow")
             else:
                 error_message = f"Falha ao realizar commit.\n\n{output}"
+                messagebox.showerror("Erro", error_message)
                 console_output.insert(tk.END, error_message, "yellow")
             commit_window.destroy()
         else:
@@ -39,9 +41,11 @@ def git_push():
     output, code = run_git_command("git push")
     if code == 0:
         confirmation_message = f"Push realizado com sucesso!\n\n{output}"
+        messagebox.showinfo("Git Push", confirmation_message)
         console_output.insert(tk.END, confirmation_message, "yellow")
     else:
         error_message = f"Falha ao realizar push.\n\n{output}"
+        messagebox.showerror("Erro", error_message)
         console_output.insert(tk.END, error_message, "yellow")
 
 # Função para aplicar cores ao texto do status do Git
@@ -49,7 +53,8 @@ def colorize_git_status(status_output):
     console_output.tag_configure("green", foreground="green")
     console_output.tag_configure("red", foreground="red")
     console_output.tag_configure("yellow", foreground="yellow")
-    
+    console_output.tag_configure("white", foreground="white")
+
     lines = status_output.split('\n')
     for line in lines:
         if line.startswith('\tnew file:'):
@@ -57,13 +62,13 @@ def colorize_git_status(status_output):
         elif line.startswith('\tmodified:'):
             console_output.insert(tk.END, line + '\n', "red")
         else:
-            console_output.insert(tk.END, line + '\n')
+            console_output.insert(tk.END, line + '\n', "white")
 
 # Criação da interface gráfica principal
 root = tk.Tk()
 root.title("Git GUI")
 
-console_output = tk.Text(root, height=10, width=100)
+console_output = tk.Text(root, height=10, width=100, bg="black", fg="white")
 console_output.pack()
 
 tk.Label(root, text="Tipos de Commit:").pack()
@@ -96,6 +101,7 @@ if status_code == 0:
     colorize_git_status(status_output)
 else:
     error_message = f"Falha ao obter status do Git.\n\n{status_output}"
+    messagebox.showerror("Erro", error_message)
     console_output.insert(tk.END, error_message, "yellow")
 
 root.mainloop()
