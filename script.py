@@ -14,11 +14,11 @@ def git_commit(commit_type, example_message):
         if commit_message:
             output, code = run_git_command(f'git commit -m "{commit_message}"')
             if code == 0:
-                messagebox.showinfo("Git Commit", f"Commit realizado com sucesso!\n\n{output}")
-                console_output.insert(tk.END, f"Commit realizado com sucesso!\n\n{output}")
+                confirmation_message = f"Commit realizado com sucesso!\n\n{output}"
+                console_output.insert(tk.END, confirmation_message, "yellow")
             else:
-                messagebox.showerror("Erro", f"Falha ao realizar commit.\n\n{output}")
-                console_output.insert(tk.END, f"Falha ao realizar commit.\n\n{output}")
+                error_message = f"Falha ao realizar commit.\n\n{output}"
+                console_output.insert(tk.END, error_message, "yellow")
             commit_window.destroy()
         else:
             messagebox.showerror("Erro", "A mensagem do commit não pode estar vazia.")
@@ -38,15 +38,33 @@ def git_commit(commit_type, example_message):
 def git_push():
     output, code = run_git_command("git push")
     if code == 0:
-        messagebox.showinfo("Git Push", f"Push realizado com sucesso!\n\n{output}")
-        console_output.insert(tk.END, f"Push realizado com sucesso!\n\n{output}")
+        confirmation_message = f"Push realizado com sucesso!\n\n{output}"
+        console_output.insert(tk.END, confirmation_message, "yellow")
     else:
-        messagebox.showerror("Erro", f"Falha ao realizar push.\n\n{output}")
-        console_output.insert(tk.END, f"Falha ao realizar push.\n\n{output}")
+        error_message = f"Falha ao realizar push.\n\n{output}"
+        console_output.insert(tk.END, error_message, "yellow")
+
+# Função para aplicar cores ao texto do status do Git
+def colorize_git_status(status_output):
+    console_output.tag_configure("green", foreground="green")
+    console_output.tag_configure("red", foreground="red")
+    console_output.tag_configure("yellow", foreground="yellow")
+    
+    lines = status_output.split('\n')
+    for line in lines:
+        if line.startswith('\tnew file:'):
+            console_output.insert(tk.END, line + '\n', "green")
+        elif line.startswith('\tmodified:'):
+            console_output.insert(tk.END, line + '\n', "red")
+        else:
+            console_output.insert(tk.END, line + '\n')
 
 # Criação da interface gráfica principal
 root = tk.Tk()
 root.title("Git GUI")
+
+console_output = tk.Text(root, height=10, width=100)
+console_output.pack()
 
 tk.Label(root, text="Tipos de Commit:").pack()
 
@@ -61,13 +79,13 @@ commit_types = {
     "fix_breaking": "fix(resourcedictionary)!: Make ResourceDictionary.Lookup() internal, use correct lookup\n\nBREAKING CHANGE: This method isn't part of the public .NET contract on WinUI. Use item indexing or TryGetValue() instead."
 }
 
+button_frame = tk.Frame(root)
+button_frame.pack()
+
 for ctype, example in commit_types.items():
-    tk.Button(root, text=ctype, command=lambda c=ctype, e=example: git_commit(c, e)).pack()
+    tk.Button(button_frame, text=ctype, command=lambda c=ctype, e=example: git_commit(c, e)).pack(side="left")
 
 tk.Button(root, text="Realizar Push", command=git_push).pack()
-
-console_output = tk.Text(root, height=10, width=100)
-console_output.pack()
 
 # Iniciando o script
 print("Executando git status...")
@@ -75,10 +93,10 @@ status_output, status_code = run_git_command("git status")
 print(status_output)
 
 if status_code == 0:
-    console_output.insert(tk.END, f"Status do Git:\n{status_output}")
+    colorize_git_status(status_output)
 else:
-    messagebox.showerror("Erro", f"Falha ao obter status do Git.\n\n{status_output}")
-    console_output.insert(tk.END, f"Falha ao obter status do Git.\n\n{status_output}")
+    error_message = f"Falha ao obter status do Git.\n\n{status_output}"
+    console_output.insert(tk.END, error_message, "yellow")
 
 root.mainloop()
 
