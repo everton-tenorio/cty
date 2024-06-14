@@ -64,6 +64,16 @@ def colorize_git_status(status_output):
         else:
             console_output.insert(tk.END, line + '\n', "white")
 
+# Função para exibir a saída do comando git push no campo de texto
+def display_git_push_output():
+    output, code = run_git_command("git push")
+    if code == 0:
+        confirmation_message = f"Push realizado com sucesso!\n\n{output}"
+        console_output.insert(tk.END, confirmation_message, "yellow")
+    else:
+        error_message = f"Falha ao realizar push.\n\n{output}"
+        console_output.insert(tk.END, error_message, "yellow")
+
 # Criação da interface gráfica principal
 root = tk.Tk()
 root.title("Git GUI")
@@ -90,7 +100,7 @@ button_frame.pack()
 for ctype, example in commit_types.items():
     tk.Button(button_frame, text=ctype, command=lambda c=ctype, e=example: git_commit(c, e)).pack(side="left")
 
-tk.Button(root, text="Realizar Push", command=git_push).pack()
+tk.Button(root, text="Realizar Push", command=display_git_push_output).pack()
 
 # Iniciando o script
 print("Executando git status...")
