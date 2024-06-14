@@ -5,26 +5,20 @@ import subprocess
 # Função para executar comandos Git e obter saída
 def run_git_command(command):
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
-    return result.stdout
-
-# Função para verificar o status do Git
-def check_git_status():
-    output = run_git_command("git status")
-    status_text.insert(tk.END, output)
-
-# Função para adicionar arquivos ao Git
-def git_add():
-    add_command = add_entry.get()
-    run_git_command(add_command)
-    messagebox.showinfo("Git Add", "Arquivos adicionados com sucesso!")
+    return result.stdout, result.returncode
 
 # Função para criar o commit com a mensagem
 def git_commit(commit_type, example_message):
     def commit():
         commit_message = commit_text.get("1.0", tk.END).strip()
         if commit_message:
-            run_git_command(f'git commit -m "{commit_message}"')
-            messagebox.showinfo("Git Commit", "Commit realizado com sucesso!")
+            output, code = run_git_command(f'git commit -m "{commit_message}"')
+            if code == 0:
+                messagebox.showinfo("Git Commit", f"Commit realizado com sucesso!\n\n{output}")
+                console_output.insert(tk.END, f"Commit realizado com sucesso!\n\n{output}")
+            else:
+                messagebox.showerror("Erro", f"Falha ao realizar commit.\n\n{output}")
+                console_output.insert(tk.END, f"Falha ao realizar commit.\n\n{output}")
             commit_window.destroy()
         else:
             messagebox.showerror("Erro", "A mensagem do commit não pode estar vazia.")
@@ -42,36 +36,29 @@ def git_commit(commit_type, example_message):
 
 # Função para realizar o push dos arquivos
 def git_push():
-    run_git_command("git push")
-    messagebox.showinfo("Git Push", "Push realizado com sucesso!")
+    output, code = run_git_command("git push")
+    if code == 0:
+        messagebox.showinfo("Git Push", f"Push realizado com sucesso!\n\n{output}")
+        console_output.insert(tk.END, f"Push realizado com sucesso!\n\n{output}")
+    else:
+        messagebox.showerror("Erro", f"Falha ao realizar push.\n\n{output}")
+        console_output.insert(tk.END, f"Falha ao realizar push.\n\n{output}")
 
 # Criação da interface gráfica principal
 root = tk.Tk()
 root.title("Git GUI")
 
-tk.Label(root, text="Status do Git:").pack()
-
-status_text = tk.Text(root, height=10, width=100)
-status_text.pack()
-
-tk.Button(root, text="Verificar Status", command=check_git_status).pack()
-
-tk.Label(root, text="Adicionar Arquivos (e.g., 'git add .'):").pack()
-add_entry = tk.Entry(root, width=100)
-add_entry.pack()
-
-tk.Button(root, text="Adicionar", command=git_add).pack()
-
 tk.Label(root, text="Tipos de Commit:").pack()
 
 commit_types = {
-    "fix": "corrige um bug",
-    "feat": "adiciona uma nova funcionalidade",
-    "docs": "atualiza a documentação",
-    "style": "formatação do código",
-    "refactor": "refatoração do código",
-    "test": "adiciona testes",
-    "chore": "outras mudanças",
+    "fix": "fix(webview): Fixed video display in WebView on Android: the control was forced to use software rendering.",
+    "feat": "feat(imageBrush): [iOS][macOS] Add support of WriteableBitmap",
+    "docs": "docs: atualiza README com instruções de setup",
+    "style": "style: formata código conforme padrão de estilo",
+    "refactor": "refactor: refatora o módulo de autenticação",
+    "test": "test: adiciona testes unitários para o módulo de pagamentos",
+    "chore": "chore: Fix XAML parsing sample",
+    "fix_breaking": "fix(resourcedictionary)!: Make ResourceDictionary.Lookup() internal, use correct lookup\n\nBREAKING CHANGE: This method isn't part of the public .NET contract on WinUI. Use item indexing or TryGetValue() instead."
 }
 
 for ctype, example in commit_types.items():
@@ -79,4 +66,19 @@ for ctype, example in commit_types.items():
 
 tk.Button(root, text="Realizar Push", command=git_push).pack()
 
+console_output = tk.Text(root, height=10, width=100)
+console_output.pack()
+
+# Iniciando o script
+print("Executando git status...")
+status_output, status_code = run_git_command("git status")
+print(status_output)
+
+if status_code == 0:
+    console_output.insert(tk.END, f"Status do Git:\n{status_output}")
+else:
+    messagebox.showerror("Erro", f"Falha ao obter status do Git.\n\n{status_output}")
+    console_output.insert(tk.END, f"Falha ao obter status do Git.\n\n{status_output}")
+
 root.mainloop()
+
