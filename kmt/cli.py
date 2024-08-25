@@ -30,32 +30,64 @@ def print_boxed_message(title, message):
 
 
 # Função para gerar mensagem de commit de exemplo com base no tipo
-def get_commit_example(commit_type):
-    commit_types = {
-        "fix": "🪲 fix([optional scope]): Fixed video display in WebView on Android: the control was forced to use software rendering.\n[optional body]\n[optional footer(s)]",
-        "feat": "✨ feat(imageBrush): [iOS][macOS] Add support of WriteableBitmap",
-        "docs": "📚 docs: atualiza README com instruções de instalação",
-        "style": "🎨 style: Mudanças que afetam a aparência do código (formatação, etc.). | formata código conforme padrão de estilo",
-        "refactor": "🔨 refactor: Mudanças no código que não corrigem bugs nem adicionam funcionalidades, mas melhoram o código. | refatora o módulo de autenticação",
-        "test": "🧪 test: Adição ou correção de testes | adiciona testes unitários para o módulo de pagamentos",
-        "chore": "🧹 chore: Tarefas de manutenção e ferramentas | Fix XAML parsing sample",
-        "build": "📦 build: Alterações que afetam o sistema de build ou dependências externas | atualizado pacote de dependências",
-        "ci": "🤖 ci: Configurações de integração contínua | ajustada configuração do pipeline de CI",
-        "perf": "🚀 perf: Melhorias no desempenho | ex.: otimizado carregamento de página",
-        "revert": "↩️  revert: Reversão de um commit anterior | revertido commit 123abc",
-        "fix_breaking": "fix(resourcedictionary)!: Make ResourceDictionary.Lookup() internal, use correct lookup\n\nBREAKING CHANGE: This method isn't part of the public .NET contract on WinUI. Use item indexing ou TryGetValue() instead."
+
+def get_commit_message(commit_type, use_emoji):
+    messages = {
+        "fix": "fix: corrigido erro no sistema",
+        "feat": "feat: adicionada nova funcionalidade",
+        "docs": "docs: atualizado README",
+        "style": "style: ajustado estilo do código",
+        "refactor": "refactor: refatorado código para melhorar desempenho",
+        "test": "test: adicionados novos testes",
+        "chore": "chore: realizado manutenção geral"
     }
-    return commit_types.get(commit_type, "Tipo de commit não reconhecido.")
+    
+    emoji_messages = {
+        "fix": "🪲 fix: corrigido erro no sistema",
+        "feat": "🚀 feat: adicionada nova funcionalidade",
+        "docs": "📚 docs: atualizado README",
+        "style": "🎨 style: ajustado estilo do código",
+        "refactor": "🔨 refactor: refatorado código para melhorar desempenho",
+        "test": "🧪 test: adicionados novos testes",
+        "chore": "🧹 chore: realizado manutenção geral"
+    }
+    
+    if use_emoji:
+        return emoji_messages.get(commit_type, "Tipo de commit desconhecido")
+    else:
+        return messages.get(commit_type, "Tipo de commit desconhecido")
+
+#def get_commit_example(commit_type):
+   # commit_types = {
+   #    "fix": "🪲 fix([optional scope]): Fixed video display in WebView on Android: the control was forced to use software rendering.\n[optional body]\n[optional footer(s)]",
+   #     "feat": "✨ feat(imageBrush): [iOS][macOS] Add support of WriteableBitmap",
+   #     "docs": "📚 docs: atualiza README com instruções de instalação",
+   #     "style": "🎨 style: Mudanças que afetam a aparência do código (formatação, etc.). | formata código conforme padrão de estilo",
+   #     "refactor": "🔨 refactor: Mudanças no código que não corrigem bugs nem adicionam funcionalidades, mas melhoram o código. | refatora o módulo de autenticação",
+   #     "test": "🧪 test: Adição ou correção de testes | adiciona testes unitários para o módulo de pagamentos",
+   #     "chore": "🧹 chore: Tarefas de manutenção e ferramentas | Fix XAML parsing sample",
+   #     "build": "📦 build: Alterações que afetam o sistema de build ou dependências externas | atualizado pacote de dependências",
+   #     "ci": "🤖 ci: Configurações de integração contínua | ajustada configuração do pipeline de CI",
+   #     "perf": "🚀 perf: Melhorias no desempenho | ex.: otimizado carregamento de página",
+   #     "revert": "↩️  revert: Reversão de um commit anterior | revertido commit 123abc",
+   #     "fix_breaking": "fix(resourcedictionary)!: Make ResourceDictionary.Lookup() internal, use correct lookup\n\nBREAKING CHANGE: This method isn't part of the public .NET contract on WinUI. Use item indexing ou TryGetValue() instead."
+   # }
+   # return commit_types.get(commit_type, "Tipo de commit não reconhecido.")
 
 def main():
     parser = argparse.ArgumentParser(description="Ferramenta de Conventional Commits CLI")
     parser.add_argument('-t', '--type', required=True, choices=['fix', 'feat', 'docs', 'style', 'refactor', 'test', 'chore', 'fix_breaking'],
                         help='Tipo de commit (fix, feat, docs, style, refactor, test, chore, fix_breaking)')
+    parser.add_argument('--emoji', '-e', action='store_true', help="Usar emojis nos exemplos de commit")
 
     args = parser.parse_args()
 
     # Gerar mensagem de exemplo
-    example_message = get_commit_example(args.type)
+    commit_type = args.type
+    use_emoji = args.emoji
+
+    # Obter a mensagem de commit
+    commit_message = get_commit_message(commit_type, use_emoji)
 
     # Criar o arquivo temporário com a mensagem exemplo
     temp_file = "commit_message.txt"
