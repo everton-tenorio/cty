@@ -73,7 +73,7 @@ def get_commit_message(commit_type, use_emoji):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="CONVC - Conventional Commits CLI")
+    parser = argparse.ArgumentParser(description="concy - Conventional Commits CLI")
     parser.add_argument('-t', '--type', required=True, choices=['fix', 'feat', 'docs', 'style', 'refactor', 'test', 'chore', 'build', 'ci', 'perf', 'revert'],
                         help='Tipo de commit (fix, feat, docs, style, refactor, test, chore, build, ci, perf, revert)')
     parser.add_argument('--emoji', '-e', action='store_true', help="Tipo com emojis no commit")
