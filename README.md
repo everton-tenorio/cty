@@ -13,8 +13,7 @@ options:
                         revert)
   --emoji, -e           Tipo com emojis no commit
 ```
-
-[!concy]('./concy.png')
+<div align="center"><img src="./concy.png" /></div>
 
 ## Conventional Commits 1.0.0
 
