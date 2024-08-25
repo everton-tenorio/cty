@@ -4,7 +4,7 @@ import os
 
 # Função para executar comandos Git e obter saída
 def run_git_command(command):
-    result = subprocess.run(command, shell=True, capture_output=True, text=True)
+    result = subprocess.run(command, capture_output=True, text=True)
     return result.stdout, result.returncode
 
 
@@ -96,7 +96,8 @@ def main():
 
     # Abrir o Vim com o arquivo temporário
     print(f"\n📜 A mensagem de commit foi salva em '{temp_file}'. Editando no Vim...\n")
-    subprocess.run(["vim", temp_file])
+    vim_path = "/usr/bin/vim"
+    subprocess.run([vim_path, temp_file], check=True)
 
     # Realizar o commit usando o arquivo de mensagem
     print(f"\n🔄 Realizando commit com a mensagem em '{temp_file}'...\n")
