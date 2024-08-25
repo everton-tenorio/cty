@@ -92,7 +92,7 @@ def main():
     # Criar o arquivo temporário com a mensagem exemplo
     temp_file = "commit_message.txt"
     with open(temp_file, "w") as f:
-        f.write(f"{example_message}\n\n")
+        f.write(f"{commit_message}\n\n")
 
     # Abrir o Vim com o arquivo temporário
     print(f"\n📜 A mensagem de commit foi salva em '{temp_file}'. Editando no Vim...\n")
