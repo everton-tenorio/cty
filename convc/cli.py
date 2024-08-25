@@ -3,9 +3,19 @@ import subprocess
 import os
 
 # Função para executar comandos Git e obter saída
-def run_git_command(command):
-    result = subprocess.run(command, capture_output=True, text=True)
-    return result.stdout, result.returncode
+#def run_git_command(command):
+#    result = subprocess.run(command, capture_output=True, text=True)
+#    return result.stdout, result.returncode
+def run_git_command(command_list):
+    try:
+        result = subprocess.run(command_list, capture_output=True, text=True, check=True)
+        return result.stdout, result.returncode
+    except subprocess.CalledProcessError as e:
+        # Retorna a saída e o código de erro em caso de falha
+        return e.output, e.returncode
+    except FileNotFoundError as e:
+        # Trata o caso em que o comando não foi encontrado
+        return str(e), 1
 
 
 def print_boxed_message(title, message):
@@ -101,11 +111,12 @@ def main():
 
     # Realizar o commit usando o arquivo de mensagem
     print(f"\n🔄 Realizando commit com a mensagem em '{temp_file}'...\n")
-    commit_output, commit_code = run_git_command(f"git commit -F {temp_file}")
+    commit_output, commit_code = run_git_command(["git", "commit", "-F", temp_file])
+    #run_git_command(f"git commit -F {temp_file}")
 
     if commit_code == 0:
         # Captura o hash e a mensagem do commit mais recente
-        log_output, log_code = run_git_command(f'git log -1 "--format=%H %s"')
+        log_output, log_code = run_git_command(["git", "log", "-1", "--format=%H %s"])
         if log_code == 0:
             commit_hash, commit_message = log_output.strip().split(' ', 1)
 
