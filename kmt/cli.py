@@ -18,6 +18,7 @@ def print_boxed_message(title, message):
     print(f"{border_char * border_length}")
 
     # Print title
+    title_line = f"{title.center(max_line_length)}"
     print(f"{border_char} {title.center(max_line_length)} {border_char}")
 
     # Print message with borders
