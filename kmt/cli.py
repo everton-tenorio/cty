@@ -72,7 +72,7 @@ def main():
         if log_code == 0:
             commit_hash, commit_message = log_output.strip().split(' ', 1)
 
-            success_message = f"Commit realizado com sucesso!\n\nCommit: {commit_hash}\nMensagem: {commit_message}\n"
+            success_message = f"Commit realizado com sucesso!\n\nCommit: {commit_hash} \nMensagem: {commit_message}\n"
             print_boxed_message("✅ Commit Realizado!", success_message)
 
         else:
