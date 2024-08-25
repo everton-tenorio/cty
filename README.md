@@ -4,7 +4,7 @@ concy - Conventional Commits CLI
 
 ```bash
 
-# .basrhc
+# .bashrc
 alias concy='python3 /home/.../concy/cli.py'
 
 usage: concy [-h] -t {fix,feat,docs,style,refactor,test,chore,build,ci,perf,revert} [--emoji]
