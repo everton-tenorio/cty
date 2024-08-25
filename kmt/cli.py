@@ -46,17 +46,17 @@ def main():
     parser = argparse.ArgumentParser(description="Ferramenta de Conventional Commits CLI")
     parser.add_argument('-t', '--type', required=True, choices=['fix', 'feat', 'docs', 'style', 'refactor', 'test', 'chore', 'fix_breaking'],
                         help='Tipo de commit (fix, feat, docs, style, refactor, test, chore, fix_breaking)')
-    
+
     args = parser.parse_args()
-    
+
     # Gerar mensagem de exemplo
     example_message = get_commit_example(args.type)
-    
+
     # Criar o arquivo temporário com a mensagem exemplo
     temp_file = "commit_message.txt"
     with open(temp_file, "w") as f:
         f.write(f"{example_message}\n\n")
-    
+
     # Abrir o Vim com o arquivo temporário
     print(f"\n📜 A mensagem de commit foi salva em '{temp_file}'. Editando no Vim...\n")
     subprocess.run(["vim", temp_file])
@@ -71,10 +71,8 @@ def main():
         if log_code == 0:
             commit_hash, commit_message = log_output.strip().split(' ', 1)
 
-            #print(f"\n✅ Commit realizado com sucesso!\n")
-            #print(f"Commit: {commit_hash}\nMensagem: {commit_message}\n")
             success_message = f"Commit realizado com sucesso!\n\nCommit: {commit_hash}\nMensagem: {commit_message}\n"
-            print_boxed_message("✅ Commit Realizado Com Sucesso", success_message)
+            print_boxed_message("✅ Commit Realizado!", success_message)
 
         else:
             print(f"\n❌ Falha ao obter o log do commit:\n{log_output.strip()}")
@@ -84,7 +82,7 @@ def main():
 
     # Remover o arquivo temporário
     os.remove(temp_file)
-    print(f"\n🗑️ Arquivo temporário '{temp_file}' excluído.")
+    print(f"\n🗑️ Arquivo temporário '{temp_file}' excluído.\n Problemas com o commit? Reset com: git reset --soft HEAD~1")
 
 if __name__ == "__main__":
     main()
