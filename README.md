@@ -1,6 +1,6 @@
 # CONCY
 
-CONCY - Conventional Commits CLI
+concy - Conventional Commits CLI
 
 ```bash
 usage: concy [-h] -t {fix,feat,docs,style,refactor,test,chore,build,ci,perf,revert} [--emoji]
