@@ -1,13 +1,13 @@
-# CONCY
+# CTY
 
-concy - Conventional Commits CLI
+cty - Conventional Commits CLI
 
 ```bash
 
 # .bashrc
-alias concy='python3 /home/.../concy/cli.py'
+alias cty='python3 /home/.../cty/cli.py'
 
-usage: concy [-h] -t {fix,feat,docs,style,refactor,test,chore,build,ci,perf,revert} [--emoji]
+usage: cty [-h] -t {fix,feat,docs,style,refactor,test,chore,build,ci,perf,revert} [--emoji]
 
 
 options:
@@ -17,7 +17,7 @@ options:
                         revert)
   --emoji, -e           Tipo com emojis no commit
 ```
-<div align="center"><img src="./concy-output.png" /></div>
+<div align="center"><img src="./cty-output.png" /></div>
 
 ## Conventional Commits 1.0.0
 
