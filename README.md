@@ -13,9 +13,9 @@ usage: cty [-h] -t {fix,feat,docs,style,refactor,test,chore,build,ci,perf,revert
 options:
   -h, --help            show this help message and exit
   -t {fix,feat,docs,style,refactor,test,chore,build,ci,perf,revert}, --type {fix,feat,docs,style,refactor,test,chore,build,ci,perf,revert}
-                        Tipo de commit (fix, feat, docs, style, refactor, test, chore, build, ci, perf,
+                        Commit type (fix, feat, docs, style, refactor, test, chore, build, ci, perf,
                         revert)
-  --emoji, -e           Tipo com emojis no commit
+  --emoji, -e           Commit type with emojis
 ```
 <div align="center"><img src="./cty-output.png" /></div>
 

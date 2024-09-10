@@ -8,10 +8,10 @@ def run_git_command(command_list):
         result = subprocess.run(command_list, capture_output=True, text=True, check=True)
         return result.stdout, result.returncode
     except subprocess.CalledProcessError as e:
-        # Retorna a saída e o código de erro em caso de falha
+        # Returns the output and error code in case of failure
         return e.output, e.returncode
     except FileNotFoundError as e:
-        # Trata o caso em que o comando não foi encontrado
+        # Handles the case where the command was not found
         return str(e), 1
 
 
@@ -36,90 +36,89 @@ def print_boxed_message(title, message):
     print(f"{border_char * border_length}")
 
 
-# Função para gerar mensagem de commit de exemplo com base no tipo
+# Function to generate example commit message based on type
 def get_commit_message(commit_type, use_emoji):
     messages = {
-        "fix": "fix: corrigido erro no sistema",
-        "feat": "feat: adicionada nova funcionalidade",
-        "docs": "docs: atualizado README",
-        "style": "style: ajustado estilo do código",
-        "refactor": "refactor: refatorado código para melhorar desempenho",
-        "test": "test: adicionados novos testes",
-        "chore": "chore: realizado manutenção geral",
-        "build": "build: Alterações que afetam o sistema de build ou dependências externas | atualizado pacote de dependências",
-        "ci": "ci: Configurações de integração contínua | ajustada configuração do pipeline de CI",
-        "perf": "perf: Melhorias no desempenho | ex.: otimizado carregamento de página",
-        "revert": "revert: Reversão de um commit anterior | revertido commit 123abc",
+        "fix": "fix: system error fixed",
+        "feat": "feat: new feature added",
+        "docs": "docs: README updated",
+        "style": "style: code style adjusted",
+        "refactor": "refactor: code refactored for better performance",
+        "test": "test: new tests added",
+        "chore": "chore: general maintenance done",
+        "build": "build: Changes affecting the build system or external dependencies | updated dependencies package",
+        "ci": "ci: Continuous integration settings | CI pipeline configuration adjusted",
+        "perf": "perf: Performance improvements | e.g., optimized page load",
+        "revert": "revert: Reverted a previous commit | reverted commit 123abc",
     }
     
     emoji_messages = {
-        "fix": "🪲 fix: corrigido erro no sistema",
-        "feat": "🚀 feat: adicionada nova funcionalidade",
-        "docs": "📚 docs: atualizado README",
-        "style": "🎨 style: ajustado estilo do código",
-        "refactor": "🔨 refactor: refatorado código para melhorar desempenho",
-        "test": "🧪 test: adicionados novos testes",
-        "chore": "🧹 chore: realizado manutenção geral",
-        "build": "📦 build: Alterações que afetam o sistema de build ou dependências externas | atualizado pacote de dependências",
-        "ci": "🤖 ci: Configurações de integração contínua | ajustada configuração do pipeline de CI",
-        "perf": "🚀 perf: Melhorias no desempenho | ex.: otimizado carregamento de página",
-        "revert": "↩️  revert: Reversão de um commit anterior | revertido commit 123abc",
+        "fix": "🪲 fix: system error fixed",
+        "feat": "🚀 feat: new feature added",
+        "docs": "📚 docs: README updated",
+        "style": "🎨 style: code style adjusted",
+        "refactor": "🔨 refactor: code refactored for better performance",
+        "test": "🧪 test: new tests added",
+        "chore": "🧹 chore: general maintenance done",
+        "build": "📦 build: Changes affecting the build system or external dependencies | updated dependencies package",
+        "ci": "🤖 ci: Continuous integration settings | CI pipeline configuration adjusted",
+        "perf": "🚀 perf: Performance improvements | e.g., optimized page load",
+        "revert": "↩️  revert: Reverted a previous commit | reverted commit 123abc",
     }
     
     if use_emoji:
-        return emoji_messages.get(commit_type, "Tipo de commit desconhecido")
+        return emoji_messages.get(commit_type, "Unknown commit type")
     else:
-        return messages.get(commit_type, "Tipo de commit desconhecido")
+        return messages.get(commit_type, "Unknown commit type")
 
 
 def main():
     parser = argparse.ArgumentParser(description="cty - Conventional Commits CLI")
     parser.add_argument('-t', '--type', required=True, choices=['fix', 'feat', 'docs', 'style', 'refactor', 'test', 'chore', 'build', 'ci', 'perf', 'revert'],
-                        help='Tipo de commit (fix, feat, docs, style, refactor, test, chore, build, ci, perf, revert)')
-    parser.add_argument('--emoji', '-e', action='store_true', help="Tipo com emojis no commit")
+                        help='Commit type (fix, feat, docs, style, refactor, test, chore, build, ci, perf, revert)')
+    parser.add_argument('--emoji', '-e', action='store_true', help="Commit type with emojis")
 
     args = parser.parse_args()
 
-    # Gerar mensagem de exemplo
+    # Generate example message
     commit_type = args.type
     use_emoji = args.emoji
 
-    # Obter a mensagem de commit
+    # Get the commit message
     commit_message = get_commit_message(commit_type, use_emoji)
 
-    # Criar o arquivo temporário com a mensagem exemplo
+    # Create the temporary file with the example message
     temp_file = "commit_message.txt"
     with open(temp_file, "w") as f:
         f.write(f"{commit_message}\n\n")
 
-    # Abrir o Vim com o arquivo temporário
-    print(f"\n📜 A mensagem de commit foi salva em '{temp_file}'. Editando no Vim...\n")
+    # Open Vim with the temporary file
+    print(f"\n📜 The commit message has been saved in '{temp_file}'. Editing in Vim...\n")
     vim_path = "/usr/bin/vim"
     subprocess.run([vim_path, temp_file], check=True)
 
-    # Realizar o commit usando o arquivo de mensagem
-    print(f"🔄 Realizando commit com a mensagem em '{temp_file}'...\n")
+    # Perform the commit using the message file
+    print(f"🔄 Performing commit with the message in '{temp_file}'...\n")
     commit_output, commit_code = run_git_command(["git", "commit", "-F", temp_file])
 
     if commit_code == 0:
-        # Captura o hash e a mensagem do commit mais recente
+        # Capture the hash and message of the most recent commit
         log_output, log_code = run_git_command(["git", "log", "-1", "--format=%H %s"])
         if log_code == 0:
             commit_hash, commit_message = log_output.strip().split(' ', 1)
 
-            success_message = f"Commit realizado com sucesso!\n\nCommit: {commit_hash} \nMensagem: {commit_message}\n"
-            print_boxed_message("✅ Commit Realizado!", success_message)
+            success_message = f"Commit successfully made!\n\nCommit: {commit_hash} \nMessage: {commit_message}\n"
+            print_boxed_message("✅ Commit Made!", success_message)
 
         else:
-            print(f"\n❌ Falha ao obter o log do commit:\n{log_output.strip()}")
+            print(f"\n❌ Failed to get commit log:\n{log_output.strip()}")
     else:
-        print(f"\n❌ Falha ao realizar commit:\n{commit_output.strip()}")  # Exibir a saída de erro detalhada
+        print(f"\n❌ Failed to commit:\n{commit_output.strip()}")  # Display detailed error output
 
 
-    # Remover o arquivo temporário
+    # Remove the temporary file
     os.remove(temp_file)
-    print(f"\n🗑️ Arquivo temporário '{temp_file}' excluído.\n Problemas com o último commit? Reset com: git reset --soft HEAD~1")
+    print(f"\n🗑️ Temporary file '{temp_file}' deleted.\n Problems with the last commit? Reset with: git reset --soft HEAD~1")
 
 if __name__ == "__main__":
     main()
-
