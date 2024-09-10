@@ -7,7 +7,7 @@ cty - Conventional Commits CLI
 # .bashrc
 alias cty='python3 /home/.../cty/cli.py'
 
-usage: cty [-h] -t {fix,feat,docs,style,refactor,test,chore,build,ci,perf,revert} [--emoji]
+usage: cty [-h] -t {fix,feat,docs,style,refactor,test,chore,build,ci,perf,revert} [--emoji] [-m MESSAGES]
 
 
 options:
