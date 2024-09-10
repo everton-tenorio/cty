@@ -16,6 +16,8 @@ options:
                         Commit type (fix, feat, docs, style, refactor, test, chore, build, ci, perf,
                         revert)
   --emoji, -e           Commit type with emojis
+  -m MESSAGES, --messages MESSAGES
+                        Displays commit messages examples. Use -m <type> for a specific message.
 ```
 <div align="center"><img src="./cty-output.png" /></div>
 
