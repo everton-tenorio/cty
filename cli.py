@@ -37,22 +37,24 @@ def print_boxed_message(title, message):
     print(f"{border_char * border_length}")
 
 
-# Function to generate example commit message based on type
-def get_commit_message(commit_type, use_emoji):
-    messages = {
-        "fix": "fix: system error fixed",
-        "feat": "feat: new feature added",
-        "docs": "docs: README updated",
-        "style": "style: code style adjusted",
-        "refactor": "refactor: code refactored for better performance",
-        "test": "test: new tests added",
-        "chore": "chore: general maintenance done",
-        "build": "build: Changes affecting the build system or external dependencies | updated dependencies package",
-        "ci": "ci: Continuous integration settings | CI pipeline configuration adjusted",
-        "perf": "perf: Performance improvements | e.g., optimized page load",
-        "revert": "revert: Reverted a previous commit | reverted commit 123abc",
-    }
+cty_types = "Commit type (fix, feat, docs, style, refactor, test, chore, build, ci, perf, revert)"
+messages = {
+    "fix": "fix: system error fixed",
+    "feat": "feat: new feature added",
+    "docs": "docs: README updated",
+    "style": "style: code style adjusted",
+    "refactor": "refactor: code refactored for better performance",
+    "test": "test: new tests added",
+    "chore": "chore: general maintenance done",
+    "build": "build: Changes affecting the build system or external dependencies | updated dependencies package",
+    "ci": "ci: Continuous integration settings | CI pipeline configuration adjusted",
+    "perf": "perf: Performance improvements | e.g., optimized page load",
+    "revert": "revert: Reverted a previous commit | reverted commit 123abc",
+}
 
+
+def get_commit_message(commit_type, use_emoji):
+    # Function to generate example commit message based on type
     emoji_messages = {
         "fix": "🪲 fix: system error fixed",
         "feat": "🚀 feat: new feature added",
@@ -68,9 +70,22 @@ def get_commit_message(commit_type, use_emoji):
     }
 
     if use_emoji:
-        return emoji_messages.get(commit_type, "Unknown commit type")
+        return emoji_messages.get(commit_type, f"Unknown commit type \n⤷ {cty_types}")
     else:
-        return messages.get(commit_type, "Unknown commit type")
+        return messages.get(commit_type, f"Unknown commit type \n⤷ {cty_types}")
+
+
+def print_messages_help(commit_type=None):
+    if commit_type:
+        message = messages.get(commit_type)
+        if message:
+            print(f"{message}")
+        else:
+            print(f"Unknown commit type: {commit_type} \n⤷ {cty_types}")
+    else:
+        print("Available commit types and their example messages:")
+        for key, value in messages.items():
+            print(f"{key}: {value}")
 
 
 def main():
@@ -78,7 +93,7 @@ def main():
     parser.add_argument(
         "-t",
         "--type",
-        required=True,
+        required=False,
         choices=[
             "fix",
             "feat",
@@ -97,8 +112,21 @@ def main():
     parser.add_argument(
         "--emoji", "-e", action="store_true", help="Commit type with emojis"
     )
+    parser.add_argument(
+        "-m",
+        "--messages",
+        help=f"Displays commit messages examples. Use -m <type> for a specific message.",
+    )
 
     args = parser.parse_args()
+
+    if args.messages:
+        print_messages_help(args.messages)
+        return
+
+    if not args.type:
+        print("Please specify a commit type using -t or -h for help ")
+        return
 
     # Generate example message
     commit_type = args.type
