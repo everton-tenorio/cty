@@ -5,7 +5,9 @@ import os
 
 def run_git_command(command_list):
     try:
-        result = subprocess.run(command_list, capture_output=True, text=True, check=True)
+        result = subprocess.run(
+            command_list, capture_output=True, text=True, check=True
+        )
         return result.stdout, result.returncode
     except subprocess.CalledProcessError as e:
         # Returns the output and error code in case of failure
@@ -25,7 +27,6 @@ def print_boxed_message(title, message):
     print(f"{border_char * border_length}")
 
     # Print title
-    title_line = f"{title.center(max_line_length)}"
     print(f"{border_char} {title.center(max_line_length)} {border_char}")
 
     # Print message with borders
@@ -51,7 +52,7 @@ def get_commit_message(commit_type, use_emoji):
         "perf": "perf: Performance improvements | e.g., optimized page load",
         "revert": "revert: Reverted a previous commit | reverted commit 123abc",
     }
-    
+
     emoji_messages = {
         "fix": "🪲 fix: system error fixed",
         "feat": "🚀 feat: new feature added",
@@ -65,7 +66,7 @@ def get_commit_message(commit_type, use_emoji):
         "perf": "🚀 perf: Performance improvements | e.g., optimized page load",
         "revert": "↩️  revert: Reverted a previous commit | reverted commit 123abc",
     }
-    
+
     if use_emoji:
         return emoji_messages.get(commit_type, "Unknown commit type")
     else:
@@ -74,9 +75,28 @@ def get_commit_message(commit_type, use_emoji):
 
 def main():
     parser = argparse.ArgumentParser(description="cty - Conventional Commits CLI")
-    parser.add_argument('-t', '--type', required=True, choices=['fix', 'feat', 'docs', 'style', 'refactor', 'test', 'chore', 'build', 'ci', 'perf', 'revert'],
-                        help='Commit type (fix, feat, docs, style, refactor, test, chore, build, ci, perf, revert)')
-    parser.add_argument('--emoji', '-e', action='store_true', help="Commit type with emojis")
+    parser.add_argument(
+        "-t",
+        "--type",
+        required=True,
+        choices=[
+            "fix",
+            "feat",
+            "docs",
+            "style",
+            "refactor",
+            "test",
+            "chore",
+            "build",
+            "ci",
+            "perf",
+            "revert",
+        ],
+        help="Commit type (fix, feat, docs, style, refactor, test, chore, build, ci, perf, revert)",
+    )
+    parser.add_argument(
+        "--emoji", "-e", action="store_true", help="Commit type with emojis"
+    )
 
     args = parser.parse_args()
 
@@ -93,7 +113,9 @@ def main():
         f.write(f"{commit_message}\n\n")
 
     # Open Vim with the temporary file
-    print(f"\n📜 The commit message has been saved in '{temp_file}'. Editing in Vim...\n")
+    print(
+        f"\n📜 The commit message has been saved in '{temp_file}'. Editing in Vim...\n"
+    )
     vim_path = "/usr/bin/vim"
     subprocess.run([vim_path, temp_file], check=True)
 
@@ -105,7 +127,7 @@ def main():
         # Capture the hash and message of the most recent commit
         log_output, log_code = run_git_command(["git", "log", "-1", "--format=%H %s"])
         if log_code == 0:
-            commit_hash, commit_message = log_output.strip().split(' ', 1)
+            commit_hash, commit_message = log_output.strip().split(" ", 1)
 
             success_message = f"Commit successfully made!\n\nCommit: {commit_hash} \nMessage: {commit_message}\n"
             print_boxed_message("✅ Commit Made!", success_message)
@@ -113,12 +135,16 @@ def main():
         else:
             print(f"\n❌ Failed to get commit log:\n{log_output.strip()}")
     else:
-        print(f"\n❌ Failed to commit:\n{commit_output.strip()}")  # Display detailed error output
-
+        print(
+            f"\n❌ Failed to commit:\n{commit_output.strip()}"
+        )  # Display detailed error output
 
     # Remove the temporary file
     os.remove(temp_file)
-    print(f"\n🗑️ Temporary file '{temp_file}' deleted.\n Problems with the last commit? Reset with: git reset --soft HEAD~1")
+    print(
+        f"\n🗑️ Temporary file '{temp_file}' deleted.\n Problems with the last commit? Reset with: git reset --soft HEAD~1"
+    )
+
 
 if __name__ == "__main__":
     main()
