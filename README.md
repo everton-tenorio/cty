@@ -1,5 +1,6 @@
 # CTY
 
+<img src="cty-logo.png"/>
 cty - Conventional Commits CLI
 
 ```bash
